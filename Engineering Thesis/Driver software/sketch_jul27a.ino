@@ -1,8 +1,8 @@
 
 int M1dirpin = 4;
 int M1steppin = 5;
-String odebraneDane="";
-int krokk;
+String receivedData="";
+int steps;
 
 void setup()
 {
@@ -11,16 +11,16 @@ void setup()
   Serial.begin(9600); //Ustawienie prędkości transmisji
 }
 
-void obrot(int krok)
+void rotation(int step)
 {
   int j=0;
 
 
-if(krok>0)
+if(step>0)
 {
   delayMicroseconds(1);
   digitalWrite(M1dirpin,LOW);
-  for(j=0;j<krok;j++)
+  for(j=0;j<step;j++)
   {
     digitalWrite(M1steppin,LOW);
     delayMicroseconds(1);
@@ -30,12 +30,12 @@ if(krok>0)
       digitalWrite(M1steppin,LOW); //Rising step
     delay(1);
 }
-if(krok<0)
+if(step<0)
 {
   delayMicroseconds(1);
   digitalWrite(M1dirpin,HIGH);
-  krok=-krok;
- for(j=0;j<krok;j++)
+  step=-step;
+ for(j=0;j<step;j++)
   {
     digitalWrite(M1steppin,HIGH);
     delayMicroseconds(1);
@@ -49,17 +49,15 @@ if(krok<0)
 
 }
 
-
-
 void loop() 
 {
   if(Serial.available() > 0) 
   { //Czy Arduino odebrano dane
-    odebraneDane = Serial.readStringUntil('\n'); //Jeśli tak, to odczytaj je do znaku końca linii i zapisz w zmiennej odebraneDane
-    krokk=odebraneDane.toInt();
-     obrot(krokk);
-      float stopnie=(krokk*0.05)/5;
-    // Serial.println("KROK " + odebraneDane + " == "+ stopnie +" stopna"); //Wyświetl komunikat
+    receivedData = Serial.readStringUntil('\n'); //Jeśli tak, to odczytaj je do znaku końca linii i zapisz w zmiennej receivedData
+    steps=receivedData.toInt();
+     rotation(steps);
+      float degrees=(steps*0.05)/5;
+    // Serial.println("Step " + receivedData + " == "+ degrees +" degrees"); //Wyświetl komunikat
     Serial.println("1");
   }
 }

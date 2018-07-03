@@ -24,10 +24,10 @@ clc
      i
     
      fprintf(s,'7200');
-      odczyt=0;
+      reading=0;
     
-     while(odczyt ~= 1)
-       odczyt=fread(s,1,'int'); 
+     while(reading ~= 1)
+       reading=fread(s,1,'int'); 
      end
  end
  
@@ -45,17 +45,17 @@ clc
 
 %imgorg=imread('org.bmp');
 %imgpor=imread('por.bmp');
-blad=abs((double(imgorg)-double(imgpor)).^2);
-mse=(mean2(blad));
+error=abs((double(imgorg)-double(imgpor)).^2);
+mse=(mean2(error));
 PSNR = 10 * log10( 255^2 / mse);
 
 message = sprintf('The mean square error is %.2f.\nThe PSNR = %.2f', mse, PSNR);
 msgbox(message);
 
-blad=abs((double(imgorg)-double(imgpor)));
-blad2=abs((double(imgorg)-double(imgpor))*10);
+error=abs((double(imgorg)-double(imgpor)));
+error2=abs((double(imgorg)-double(imgpor))*10);
 
-imshow(blad(:,:,1),[-255 255]);
+imshow(error(:,:,1),[-255 255]);
 figure
-imshow(blad2(:,:,1),[-255 255]);
+imshow(error2(:,:,1),[-255 255]);
 

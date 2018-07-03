@@ -1,16 +1,16 @@
 clear
 clc
 
-liczba_zdjec=3600;
+number_of_images=3600;
 
-liczbaKamer=1;
-zapis=1;%0-brak zapisu 1-zapis
-krok='10'; %dodani-w lewo ujemny- w prawo
+numberCamera=1;
+save=1;%0-brak zapisu 1-zapis
+step='10'; %dodani-w lewo ujemny- w prawo
 
-if (str2double(krok) > 0)
-    obrot=0;
+if (str2double(step) > 0)
+    rotation=0;
 else
-    obrot=1;
+    rotation=1;
 end
 
 s = serial('COM3','BaudRate',9600);            % Create serial object (PORT Dependent)
@@ -21,7 +21,7 @@ set(vid,'ReturnedColorSpace','rgb');
 vid.TriggerRepeat = Inf;
 set(vid,'FramesPerTrigger',3600);
 
-for j=1:liczbaKamer
+for j=1:numberCamera
 tic  
 
 folder=sprintf('kamera%d',j);
@@ -31,9 +31,9 @@ start(vid);
 
 pause(4);
 
-B=uint8(zeros(1920,liczba_zdjec,3));
+B=uint8(zeros(1920,number_of_images,3));
 
-for i=1:liczba_zdjec
+for i=1:number_of_images
     i
     img = getsnapshot(vid);
 
@@ -41,16 +41,16 @@ for i=1:liczba_zdjec
     img = imrotate(img,90);
     B(:,i,:)=img(:,540,:);
     
-    if (zapis==1 && mod(i,100)==0)
+    if (save==1 && mod(i,100)==0)
         imwrite(img(:,:,:),sprintf('%s//zdjecie%d.jpg',folder,i));
     end
      
-   odczyt='';
+   reading='';
    %fprintf(s, '10');
-   fprintf(s, krok);
+   fprintf(s, step);
 
-   while(odczyt == '')
-      odczyt=fread(s,1,'uchar'); 
+   while(reading == '')
+      reading=fread(s,1,'uchar'); 
    end
    
     out = imaqmem;
@@ -76,5 +76,5 @@ end
 
 imwrite(B,sprintf('wynik%s.bmp',folder));
 imshow(B);
-czas(1,j)=toc;
+time(1,j)=toc;
 end
